@@ -1,0 +1,4 @@
+{
+  "HTTP_PORT" : 8080,
+  "DATABASE" : "/Users/shawpan/Documents/open-source-contributions/monitor-api/resources/db.json"
+}
