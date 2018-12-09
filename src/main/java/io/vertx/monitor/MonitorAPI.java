@@ -47,6 +47,12 @@ public class MonitorAPI extends AbstractVerticle {
     Router router = Router.router(vertx);
 
     router.route().handler(BodyHandler.create());
+    // router.route().handler(routingContext -> {
+    //   String apiKey = routingContext.request().getParam("apiKey");
+    //   if(!"mUHtTfV5O1aPYpQ7PF8lng==".equals(apiKey)) {
+    //     routingContext.fail(401);
+    //   }
+    // });
     router.get("/").handler(this::handleHome);
     router.get("/service").handler(this::handleGetAllServices);
     router.post("/service").handler(this::handleAddService);
