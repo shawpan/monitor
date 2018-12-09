@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.LinkedHashMap;
+import io.vertx.ext.web.handler.StaticHandler;
 
 public class MonitorAPI extends AbstractVerticle {
 
@@ -53,10 +54,11 @@ public class MonitorAPI extends AbstractVerticle {
     //     routingContext.fail(401);
     //   }
     // });
-    router.get("/").handler(this::handleHome);
-    router.get("/service").handler(this::handleGetAllServices);
-    router.post("/service").handler(this::handleAddService);
-    router.delete("/service/:id").handler(this::handleDeleteService);
+    router.get("/api").handler(this::handleHome);
+    router.get("/api/service").handler(this::handleGetAllServices);
+    router.post("/api/service").handler(this::handleAddService);
+    router.delete("/api/service/:id").handler(this::handleDeleteService);
+    router.route("/*").handler(StaticHandler.create());
 
     return router;
   }

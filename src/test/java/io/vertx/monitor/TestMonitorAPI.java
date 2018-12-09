@@ -28,7 +28,7 @@ public class TestMonitorAPI {
   @DisplayName("Should start a Web Server")
   @Timeout(value = 10, timeUnit = TimeUnit.SECONDS)
   void start_http_server(Vertx vertx, VertxTestContext testContext) throws Throwable {
-    vertx.createHttpClient().getNow(8080, "localhost", "/?apiKey=mUHtTfV5O1aPYpQ7PF8lng==", response -> testContext.verify(() -> {
+    vertx.createHttpClient().getNow(8080, "localhost", "/api?apiKey=mUHtTfV5O1aPYpQ7PF8lng==", response -> testContext.verify(() -> {
       assertTrue(response.statusCode() == 200);
       response.handler(body -> {
         assertTrue(body.toString().contains("Welcome to monitor"));
@@ -41,7 +41,7 @@ public class TestMonitorAPI {
   @DisplayName("Should return all services")
   @Timeout(value = 10, timeUnit = TimeUnit.SECONDS)
   void get_all_services(Vertx vertx, VertxTestContext testContext) throws Throwable {
-    vertx.createHttpClient().getNow(8080, "localhost", "/service?apiKey=mUHtTfV5O1aPYpQ7PF8lng==", response -> testContext.verify(() -> {
+    vertx.createHttpClient().getNow(8080, "localhost", "/api/service?apiKey=mUHtTfV5O1aPYpQ7PF8lng==", response -> testContext.verify(() -> {
       assertTrue(response.statusCode() == 200);
       response.handler(body -> {
         assertTrue(response.headers().get("content-type").contains("application/json"));
@@ -56,7 +56,7 @@ public class TestMonitorAPI {
   void add_service(Vertx vertx, VertxTestContext testContext) throws Throwable {
     final String json = Json.encodePrettily(new Service("http://google.com"));
     final String length = Integer.toString(json.length());
-    vertx.createHttpClient().post(8080, "localhost", "/service?apiKey=mUHtTfV5O1aPYpQ7PF8lng==")
+    vertx.createHttpClient().post(8080, "localhost", "/api/service?apiKey=mUHtTfV5O1aPYpQ7PF8lng==")
         .putHeader("content-type", "application/json")
         .putHeader("content-length", length)
         .handler(response -> testContext.verify(() -> {
