@@ -13,6 +13,7 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpClient;
 import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
@@ -62,11 +63,13 @@ public class Monitor extends AbstractVerticle {
       URL url = new URL(service.getString("url"));
       Integer port = url.getPort() < 0 ? 80 : url.getPort();
       System.out.println("Getting " + port + " " + service.getString("url"));
-      vertx.createHttpClient().getNow(port, url.getHost(), url.getFile(), response -> {
+      HttpClient httpClient = vertx.createHttpClient();
+      httpClient.getNow(port, url.getHost(), url.getFile(), response -> {
         String status = response.statusCode() == 200 ? "OK" : "FAIL";
         service.put("status", status);
         service.put("lastCheckedAt", (new Timestamp(System.currentTimeMillis())).toString());
         future.complete(service);
+        httpClient.close();
       });
     } catch (Exception ex) {
       System.out.println(ex.getMessage());
