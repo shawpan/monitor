@@ -1,4 +1,4 @@
-= Starter
+= Monitor
 
 image:https://img.shields.io/badge/vert.x-3.5.3-purple.svg[link="https://vertx.io"]
 
@@ -18,7 +18,14 @@ To package your application:
 
 To run your application:
 ```
-./mvnw clean exec:java
+java -jar target/target/monitor-1.0.0-SNAPSHOT-fat.jar
+```
+browse `localhost:8080`
+
+API
+```
+localhost:8080/api/service GET, POST
+localhost:8080/api/service/:id DELETE
 ```
 
 == Help
