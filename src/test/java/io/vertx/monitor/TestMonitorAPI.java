@@ -54,7 +54,7 @@ public class TestMonitorAPI {
   @DisplayName("Should add new service to the service list")
   @Timeout(value = 10, timeUnit = TimeUnit.SECONDS)
   void add_service(Vertx vertx, VertxTestContext testContext) throws Throwable {
-    final String json = Json.encodePrettily(new Service("http://service"));
+    final String json = Json.encodePrettily(new Service("http://google.com"));
     final String length = Integer.toString(json.length());
     vertx.createHttpClient().post(8080, "localhost", "/service")
         .putHeader("content-type", "application/json")
@@ -65,7 +65,7 @@ public class TestMonitorAPI {
           response.bodyHandler(body -> testContext.verify( () -> {
             final Service service = Json.decodeValue(body.toString(), Service.class);
             assertTrue(service.getId() != null);
-            assertTrue(service.getUrl().equals("http://service"));
+            assertTrue(service.getUrl().equals("http://google.com"));
             assertTrue(service.getStatus() == Service.Status.UNKNOWN);
             testContext.completeNow();
           }));

@@ -38,6 +38,9 @@ public class MonitorAPI extends AbstractVerticle {
 
   private void initializeDatabase() {
     database = new Database();
+    vertx.eventBus().consumer("sync-api", receivedMessage -> {
+     database.syncToAPI();
+   });
   }
 
   private Router getRouter() {
@@ -88,5 +91,6 @@ public class MonitorAPI extends AbstractVerticle {
   public void start(Future<Void> startFuture) throws Exception {
     initializeDatabase();
     initializeServer(startFuture);
+    vertx.deployVerticle(new Monitor(database.getInFile(), database.getOutFile()));
   }
 }

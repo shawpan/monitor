@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Service {
 
-  private static final AtomicInteger COUNTER = new AtomicInteger();
+  private static final AtomicInteger COUNTER = new AtomicInteger(1);
 
   private Status status;
 
@@ -22,6 +22,12 @@ public class Service {
   public Service(@JsonProperty("url") String url) {
     this.id = COUNTER.getAndIncrement();
     this.status = Status.UNKNOWN;
+    this.url = url;
+  }
+
+  public Service(Integer id, String url, Status status) {
+    this.id = id;
+    this.status = status;
     this.url = url;
   }
 
