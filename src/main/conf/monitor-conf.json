@@ -1,0 +1,6 @@
+
+{
+  "HTTP_PORT" : 8080,
+  "DB_OUT" : "resources/db_out.json",
+  "DB_IN" : "resources/db_in.json"
+}
