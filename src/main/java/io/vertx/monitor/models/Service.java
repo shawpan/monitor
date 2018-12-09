@@ -3,6 +3,7 @@ package io.vertx.monitor.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.sql.Timestamp;
 
 public class Service {
 
@@ -14,6 +15,8 @@ public class Service {
 
   private final Integer id;
 
+  private String lastCheckedAt;
+
   public enum Status {
     OK, FAIL, UNKNOWN
   }
@@ -23,12 +26,14 @@ public class Service {
     this.id = COUNTER.getAndIncrement();
     this.status = Status.UNKNOWN;
     this.url = url;
+    this.lastCheckedAt = (new Timestamp(System.currentTimeMillis())).toString();
   }
 
   public Service(Integer id, String url, Status status) {
     this.id = id;
     this.status = status;
     this.url = url;
+    this.lastCheckedAt = (new Timestamp(System.currentTimeMillis())).toString();
   }
 
   @JsonProperty("id")
@@ -52,6 +57,15 @@ public class Service {
 
   public void setStatus(Status status) {
     this.status = status;
+  }
+
+  @JsonProperty("lastCheckedAt")
+  public String getLastCheckedAt() {
+    return lastCheckedAt;
+  }
+
+  public void setLastCheckedAt(String lastCheckedAt) {
+    this.lastCheckedAt = lastCheckedAt;
   }
 
   @Override

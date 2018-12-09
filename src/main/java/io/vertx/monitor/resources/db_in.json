@@ -1,5 +1,6 @@
 [ {
   "url" : "http://google.com",
   "status" : "FAIL",
-  "id" : 1
+  "id" : 1,
+  "lastCheckedAt" : "2018-12-09 23:12:45.215"
 } ]

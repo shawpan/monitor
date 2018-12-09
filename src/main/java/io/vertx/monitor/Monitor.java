@@ -16,6 +16,7 @@ import io.vertx.core.buffer.Buffer;
 import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.Timestamp;
 import io.vertx.monitor.models.Database;
 
 public class Monitor extends AbstractVerticle {
@@ -64,6 +65,7 @@ public class Monitor extends AbstractVerticle {
       vertx.createHttpClient().getNow(port, url.getHost(), url.getFile(), response -> {
         String status = response.statusCode() == 200 ? "OK" : "FAIL";
         service.put("status", status);
+        service.put("lastCheckedAt", (new Timestamp(System.currentTimeMillis())).toString());
         future.complete(service);
       });
     } catch (Exception ex) {
