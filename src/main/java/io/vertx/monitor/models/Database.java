@@ -32,6 +32,7 @@ public class Database {
     services = new HashMap<Integer, Service>();
     outFile = "../monitor/src/main/java/io/vertx/monitor/resources/db_out.json";
     inFile = "../monitor/src/main/java/io/vertx/monitor/resources/db_in.json";
+    loadFromFile(outFile);
   }
 
   public String getInFile() {
@@ -98,6 +99,24 @@ public class Database {
     vertx.fileSystem().readFile(file, handler -> {
 			if (handler.succeeded()) {
         JsonArray json = new JsonArray(handler.result());
+        updateStatusOfServices(json);
+        future.complete();
+			} else {
+        System.err.println("Error while reading from file: " + handler.cause().getMessage());
+        future.fail(handler.cause());
+      }
+		});
+
+    return future;
+  }
+
+  public Future<Void> loadFromFile(String file) {
+    Vertx vertx = Vertx.vertx();
+    Future<Void> future = Future.future();
+
+    vertx.fileSystem().readFile(file, handler -> {
+			if (handler.succeeded()) {
+        JsonArray json = new JsonArray(handler.result());
         transformJsonToServices(json);
         future.complete();
 			} else {
@@ -109,17 +128,30 @@ public class Database {
     return future;
   }
 
+  public void updateStatusOfServices(JsonArray json) {
+    System.out.println(services.size());
+    for (int i = 0; i < json.size(); i++) {
+      Integer id = json.getJsonObject(i).getInteger("id");
+      String status = json.getJsonObject(i).getString("status");
+      String lastCheckedAt = json.getJsonObject(i).getString("lastCheckedAt");
+      Service service = services.get(id);
+      if(service != null) {
+        service.setStatus(Service.Status.valueOf(status));
+        service.setLastCheckedAt(lastCheckedAt);
+      }
+    }
+  }
+
   public void transformJsonToServices(JsonArray json) {
     HashMap<Integer, Service> services = new HashMap<Integer, Service>();
 
     for (int i = 0; i < json.size(); i++) {
       Integer id = json.getJsonObject(i).getInteger("id");
-      String url = json.getJsonObject(i).getString("url");
       String status = json.getJsonObject(i).getString("status");
+      String url = json.getJsonObject(i).getString("url");
       Service service = new Service(id, url, Service.Status.valueOf(status));
       services.put(service.getId(), service);
     }
-
     this.services = services;
   }
 }
