@@ -13,10 +13,14 @@ import java.util.Map;
 import java.util.Iterator;
 import io.vertx.core.json.Json;
 import io.vertx.core.buffer.Buffer;
+import java.util.Collections;
+import java.util.ArrayList;
 
 public class Database {
 
   private HashMap<Integer, Service> services;
+
+  private Vertx vertx;
 
   /**
    * Background service reads and api writes to this file
@@ -28,11 +32,16 @@ public class Database {
    */
   private String inFile;
 
-  public Database() {
+  public Database(Vertx vertx) {
+    this.vertx = vertx;
     services = new HashMap<Integer, Service>();
     outFile = "../monitor/src/main/java/io/vertx/monitor/resources/db_out.json";
     inFile = "../monitor/src/main/java/io/vertx/monitor/resources/db_in.json";
     loadFromFile(outFile);
+  }
+
+  public Integer getNextId() {
+    return services.size() == 0 ? 1 : Collections.max(new ArrayList<Integer>(services.keySet())) + 1;
   }
 
   public String getInFile() {
@@ -48,6 +57,7 @@ public class Database {
   }
 
   public void addService(Service service) {
+    service.setId(getNextId());
     services.put(service.getId(), service);
     syncFromAPI();
   }
@@ -77,7 +87,6 @@ public class Database {
   }
 
   public Future<Void> writeToFile(String file) {
-    Vertx vertx = Vertx.vertx();
     Future<Void> future = Future.future();
 
 		vertx.fileSystem().writeFile(file, Buffer.buffer(Json.encodePrettily(services.values())), handler -> {
@@ -93,7 +102,6 @@ public class Database {
   }
 
   public Future<Void> readFromFile(String file) {
-    Vertx vertx = Vertx.vertx();
     Future<Void> future = Future.future();
 
     vertx.fileSystem().readFile(file, handler -> {
@@ -111,7 +119,6 @@ public class Database {
   }
 
   public Future<Void> loadFromFile(String file) {
-    Vertx vertx = Vertx.vertx();
     Future<Void> future = Future.future();
 
     vertx.fileSystem().readFile(file, handler -> {

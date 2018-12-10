@@ -7,13 +7,11 @@ import java.sql.Timestamp;
 
 public class Service {
 
-  private static final AtomicInteger COUNTER = new AtomicInteger(1);
-
   private Status status;
 
   private String url;
 
-  private final Integer id;
+  private Integer id;
 
   private String lastCheckedAt;
 
@@ -23,7 +21,7 @@ public class Service {
 
   @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
   public Service(@JsonProperty("url") String url) {
-    this.id = COUNTER.getAndIncrement();
+    this.id = 0;
     this.status = Status.UNKNOWN;
     this.url = url;
     this.lastCheckedAt = (new Timestamp(System.currentTimeMillis())).toString();
@@ -39,6 +37,10 @@ public class Service {
   @JsonProperty("id")
   public Integer getId() {
     return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   @JsonProperty("url")

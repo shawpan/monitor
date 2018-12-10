@@ -38,7 +38,7 @@ public class MonitorAPI extends AbstractVerticle {
   }
 
   private void initializeDatabase() {
-    database = new Database();
+    database = new Database(vertx);
     vertx.eventBus().consumer("sync-api", receivedMessage -> {
      database.syncToAPI();
    });
@@ -76,7 +76,7 @@ public class MonitorAPI extends AbstractVerticle {
 
   private void handleAddService(RoutingContext routingContext) {
     HttpServerResponse response = routingContext.response();
-    final Service service = Json.decodeValue(routingContext.getBodyAsString(),Service.class);
+    Service service = Json.decodeValue(routingContext.getBodyAsString(),Service.class);
     database.addService(service);
     response.putHeader("content-type", "application/json")
             .setStatusCode(201)
