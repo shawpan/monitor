@@ -28,6 +28,17 @@ localhost:8080/api/service GET, POST
 localhost:8080/api/service/:id DELETE
 ```
 
+Summary 
+```
+Monitor.java is the background service that checks status of urls from db_out.json and writes to db_in.json
+MonitorAPI.java has the api endpoints syncs db_in.json to db_out.json and reads and writes to db_out.json as a database
+
+Service.java is the model for service entity
+Database.java performs read/write/query to file storage
+```
+Todo
+reafactoring and cases such as duplicate urls etc.
+
 == Help
 
 * https://vertx.io/docs/[Vert.x Documentation]
